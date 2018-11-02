@@ -7,6 +7,7 @@
 
 namespace SprykerShop\Yves\CmsContentWidgetProductConnector\Plugin;
 
+use Generated\Shared\Transfer\CustomerTransfer;
 use Spryker\Yves\CmsContentWidgetProductConnector\Plugin\CmsProductContentWidgetPlugin as SprykerCmsProductContentWidgetPlugin;
 use Spryker\Yves\Kernel\Widget\WidgetContainerInterface;
 use Twig_Environment;
@@ -57,11 +58,11 @@ class CmsProductContentWidgetPlugin extends SprykerCmsProductContentWidgetPlugin
      *
      * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
-    protected function mapProductStorageTransfer(array $productData)
+    protected function mapProductStorageTransfer(array $productData, ?CustomerTransfer $customerTransfer = null, string $priceMode = null)
     {
         return $this->getFactory()
             ->getProductStorageClient()
-            ->mapProductStorageData($productData, $this->getLocale());
+            ->mapProductStorageData($productData, $this->getLocale(), [], $customerTransfer, $priceMode);
     }
 
     /**
