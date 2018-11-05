@@ -8,6 +8,9 @@
 namespace SprykerShop\Yves\CmsContentWidgetProductConnector\Plugin;
 
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
+use Spryker\Client\Customer\CustomerClient;
+use Spryker\Client\Price\PriceClient;
 use Spryker\Yves\CmsContentWidgetProductConnector\Plugin\CmsProductContentWidgetPlugin as SprykerCmsProductContentWidgetPlugin;
 use Spryker\Yves\Kernel\Widget\WidgetContainerInterface;
 use Twig_Environment;
@@ -54,11 +57,43 @@ class CmsProductContentWidgetPlugin extends SprykerCmsProductContentWidgetPlugin
     }
 
     /**
+     * @param array $concreteProductSkuList
+     * @param array $skuToProductAbstractIdMap
+     *
+     * @return \Generated\Shared\Transfer\ProductViewTransfer[]
+     */
+    protected function collectProductAbstractList(array $concreteProductSkuList, array $skuToProductAbstractIdMap)
+    {
+        $customer = (new CustomerClient())->getCustomer();
+        $priceMode = (new PriceClient())->getCurrentPriceMode();
+
+        $productAbstractIds = [];
+        foreach ($concreteProductSkuList as $sku) {
+            if (!isset($skuToProductAbstractIdMap[$sku])) {
+                continue;
+            }
+
+            $productAbstractIds[] = $skuToProductAbstractIdMap[$sku];
+        }
+
+        $products = $this->getFactory()->getProductStorageClient()->findMappedProductsAbstractStorageData(
+            $productAbstractIds,
+            $this->getLocale(),
+            $customer,
+            $priceMode
+        );
+
+        return array_filter($products, function (ProductViewTransfer $productViewTransfer) {
+            return $productViewTransfer->getAvailable();
+        });
+    }
+
+    /**
      * @param array $productData
      *
      * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
-    protected function mapProductStorageTransfer(array $productData, ?CustomerTransfer $customerTransfer = null, string $priceMode = null)
+    protected function mapProductStorageTransfer(array $productData, ?CustomerTransfer $customerTransfer = null, ?string $priceMode = null)
     {
         return $this->getFactory()
             ->getProductStorageClient()

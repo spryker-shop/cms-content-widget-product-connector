@@ -12,17 +12,25 @@ use Generated\Shared\Transfer\CustomerTransfer;
 interface CmsContentWidgetProductConnectorToProductStorageClientInterface
 {
     /**
+     * @param array $productAbstractIds
+     * @param string $localeName
+     * @param \Generated\Shared\Transfer\CustomerTransfer|null $customerTransfer
+     * @param string|null $priceMode
+     *
+     * @return \Generated\Shared\Transfer\ProductViewTransfer[]|null
+     */
+    public function findMappedProductsAbstractStorageData(array $productAbstractIds, string $localeName, ?CustomerTransfer $customerTransfer = null, ?string $priceMode = null): ?array;
+
+    /**
      * @param array $data
      * @param string $localeName
      * @param array $selectedAttributes
      *
      * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
-    public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = [], ?CustomerTransfer $customerTransfer = null, string $priceMode = null);
+    public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = [], ?CustomerTransfer $customerTransfer = null, ?string $priceMode = null);
 
     /**
-     * @deprecated Use findProductAbstractStorageData(int $idProductAbstract, string $localeName): ?array
-     *
      * @param int $idProductAbstract
      * @param string $localeName
      *

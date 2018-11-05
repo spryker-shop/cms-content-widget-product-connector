@@ -8,6 +8,7 @@
 namespace SprykerShop\Yves\CmsContentWidgetProductConnector\Dependency\Client;
 
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\ProductViewTransfer;
 
 class CmsContentWidgetProductConnectorToProductStorageClientBridge implements CmsContentWidgetProductConnectorToProductStorageClientInterface
 {
@@ -25,26 +26,37 @@ class CmsContentWidgetProductConnectorToProductStorageClientBridge implements Cm
     }
 
     /**
+     * @param array $productAbstractIds
+     * @param string $localeName
+     * @param \Generated\Shared\Transfer\CustomerTransfer|null $customerTransfer
+     * @param string|null $priceMode
+     *
+     * @return \Generated\Shared\Transfer\ProductViewTransfer[]|null
+     */
+    public function findMappedProductsAbstractStorageData(array $productAbstractIds, string $localeName, CustomerTransfer $customerTransfer = null, string $priceMode = null): ?array
+    {
+        return $this->productStorageClient->findMappedProductsAbstractStorageData($productAbstractIds, $localeName, $customerTransfer, $priceMode);
+    }
+
+    /**
      * @param array $data
      * @param string $localeName
      * @param array $selectedAttributes
      *
      * @return \Generated\Shared\Transfer\ProductViewTransfer
      */
-    public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = [], ?CustomerTransfer $customerTransfer = null, string $priceMode = null)
+    public function mapProductStorageData(array $data, $localeName, array $selectedAttributes = [], CustomerTransfer $customerTransfer = null, string $priceMode = null): ProductViewTransfer
     {
         return $this->productStorageClient->mapProductStorageData($data, $localeName, $selectedAttributes, $customerTransfer, $priceMode);
     }
 
     /**
-     * @deprecated Use findProductAbstractStorageData(int $idProductAbstract, string $localeName): ?array
-     *
      * @param int $idProductAbstract
      * @param string $localeName
      *
      * @return array
      */
-    public function getProductAbstractStorageData($idProductAbstract, $localeName)
+    public function getProductAbstractStorageData($idProductAbstract, $localeName): array
     {
         return $this->productStorageClient->getProductAbstractStorageData($idProductAbstract, $localeName);
     }
