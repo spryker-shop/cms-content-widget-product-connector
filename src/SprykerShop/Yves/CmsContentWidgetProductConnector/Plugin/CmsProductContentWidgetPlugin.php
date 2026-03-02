@@ -44,9 +44,6 @@ class CmsProductContentWidgetPlugin extends SprykerCmsProductContentWidgetPlugin
         return $result;
     }
 
-    /**
-     * @return \Spryker\Yves\Kernel\Widget\WidgetContainerInterface
-     */
     protected function createCmsProductContentWidgetCollection(): WidgetContainerInterface
     {
         return $this->getFactory()->createCmsProductContentWidgetCollection();

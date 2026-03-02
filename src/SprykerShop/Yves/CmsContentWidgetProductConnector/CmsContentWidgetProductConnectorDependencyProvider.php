@@ -37,11 +37,6 @@ class CmsContentWidgetProductConnectorDependencyProvider extends SprykerCmsConte
         return $container;
     }
 
-    /**
-     * @param \Spryker\Yves\Kernel\Container $container
-     *
-     * @return \Spryker\Yves\Kernel\Container
-     */
     protected function addCmsProductContentWidgetPlugins(Container $container): Container
     {
         $container->set(static::PLUGIN_CMS_PRODUCT_CONTENT_WIDGETS, function () {
