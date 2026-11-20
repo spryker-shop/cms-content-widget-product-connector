@@ -6,8 +6,13 @@
     isUnavailableProductsDisplayed: isUnavailableProductsDisplayed | default(false),
 } %}
 
+{# Identifies the product list for the traceable events, e.g. GA4 view_item_list; a product group has no title of its own.
+   The CMS content function passes no list identifier, so all of these widgets on a page report as one list. #}
+{% set itemListId = 'cms_product_group' %}
+{% set itemListName = 'Product group' %}
+
 {% block body %}
-    <div class="grid grid--stretch">
+    <div class="grid grid--stretch" data-item-list-id="{{ itemListId }}" data-item-list-name="{{ itemListName }}">
         {% for product in data.products %}
             {% if data.isUnavailableProductsDisplayed or product.available %}
                 {% widget 'CmsProductGroupWidget' args [product] only %}
@@ -22,4 +27,9 @@
         {% elsewidget 'ProductGroupWidgetPlugin' args [data.product] only %} {# @deprecated Use CmsProductGroupWidget instead. #}
         {% endwidget %}
     {% endif %}
+
+    {% block productTrackingDetails %}
+        {% set trackedProducts = data.product is not empty ? data.products | merge([data.product]) : data.products %}
+        {% widget 'ProductTrackingDetailsWidget' args [trackedProducts] only %}{% endwidget %}
+    {% endblock %}
 {% endblock %}
